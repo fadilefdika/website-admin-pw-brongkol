@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="w-64 h-screen bg-gray-800 text-white">
+    <div className="w-64 h-auto bg-gray-800 text-white">
       <div className="p-4 text-xl font-bold">Admin</div>
       <nav className="mt-4">
         <ul>
