@@ -8,24 +8,17 @@ import Scales from '../../public/scales.svg';
 import Scaless from '../../public/scaless.svg';
 import CustomCard from '@/components/ui/CustomCard';
 import { formatNumber } from '@/utils/formatNumber';
-import { Payment, columns } from '@/components/ui/CustomTable';
-import { DataTable } from '@/pages/tree-data/tree-data';
+import { Tree, columns } from '@/components/ui/ColumnCustomTable';
+import { DataTable } from '@/pages/tree-data/tabel-tree';
+import { dummyDataPohon } from '@/data/dummyDataPohon';
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Tree[]> {
   // Fetch data from your API here.
-  return [
-    {
-      id: '728ed52f',
-      amount: 100,
-      status: 'pending',
-      email: 'm@example.com',
-    },
-    // ...
-  ];
+  return dummyDataPohon;
 }
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<Payment[]>([]);
+  const [data, setData] = useState<Tree[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +70,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Tabel Rekap Pohon Durian dan Kopi */}
-      <div className="container mx-auto py-10">
+      <div className="mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>
     </div>
