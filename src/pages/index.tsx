@@ -6,14 +6,14 @@ import Cofeee from '../../public/coffee.svg';
 import Bullish from '../../public/bullish.svg';
 import Scales from '../../public/scales.svg';
 import Scaless from '../../public/scaless.svg';
+import { DollarSignIcon } from 'lucide-react';
 import CustomCard from '@/components/ui/CustomCard';
 import { formatNumber } from '@/utils/formatNumber';
-import { Tree, columns } from '@/components/ui/ColumnCustomTable';
-import { DataTable } from '@/pages/tree-data/tabel-tree';
+import { Tree, columns } from '@/pages/tree-data/tabel-tree';
+import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { dummyDataPohon } from '@/data/dummyDataPohon';
 
 async function getData(): Promise<Tree[]> {
-  // Fetch data from your API here.
   return dummyDataPohon;
 }
 
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
             description="22 November 2024"
             prefix="Rp"
             content={formatNumber(5000000)}
-            trees={<Durian className="w-6 h-6" />}
+            trees={<DollarSignIcon className="w-6 h-6" />}
             indicator={<Bullish className="w-6 h-6" />}
             percentage={10}
           />
@@ -71,7 +71,7 @@ const Home: React.FC = () => {
 
       {/* Tabel Rekap Pohon Durian dan Kopi */}
       <div className="mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns} data={data} rowsPerPage={5} />
       </div>
     </div>
   );

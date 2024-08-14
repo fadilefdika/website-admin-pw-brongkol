@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
             </Link>
           </li>
           <li className="hover:bg-gray-700">
-            <Link href="/about" className="block p-4">
+            <Link href="/tree-data" className="block p-4">
               Data Tanaman
             </Link>
           </li>
