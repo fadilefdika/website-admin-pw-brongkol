@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  title: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ title }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-white w-full h-[70px] text-black shadow-md flex items-center">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
+          <h1 className="text-xl font-semibold">{title}</h1>
         </div>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0">
           <div className="relative inline-block text-left">

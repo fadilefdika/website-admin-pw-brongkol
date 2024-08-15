@@ -10,10 +10,11 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   rowsPerPage: number;
-  showPagination?: boolean;
+  title: string;
+  description: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data, rowsPerPage }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, rowsPerPage, description, title }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -42,11 +43,11 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage }: DataTab
   });
 
   return (
-    <div className="bg-white shadow-md py-4 px-6 w-auto rounded-xl">
+    <div className="bg-white shadow-md pt-2 pb-4 px-6 w-auto rounded-xl">
       <div className="flex flex-row justify-between py-5">
         <div>
-          <h2 className="text-xl font-semibold">Rekan Data Pohon Durian dan Kopi</h2>
-          <p className="text-sm font-light">Rekapitulasi data tanaman kopi dan durian Desa Brongkol</p>
+          <h2 className="text-xl font-semibold">{title}</h2>
+          <p className="text-sm font-light py-1">{description}</p>
         </div>
         <div>
           <DropdownMenu>

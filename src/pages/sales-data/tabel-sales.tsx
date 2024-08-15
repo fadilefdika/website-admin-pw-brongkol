@@ -7,20 +7,35 @@ import { MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-export type Tree = {
+export type Sales = {
   id: string;
+  tanggalPenjualan: string;
   jenisPohon: string;
   aksesi: string;
-  lokasi: string;
-  tanggalPenanaman: string;
-  tanggalPemangkasan: string;
-  pemupukanTerakhir: string;
+  jumlahPenjualan: number;
+  harga: number;
+  totalPendapatan: number;
+  keterangan: string;
 };
 
-export const columnsTree: ColumnDef<Tree>[] = [
+export const columnsSales: ColumnDef<Sales>[] = [
   {
     header: 'No',
     accessorFn: (_, index) => index + 1,
+  },
+  {
+    accessorKey: 'tanggalPenjualan',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          <div className="flex flex-col text-left">
+            <span>Tanggal</span>
+            <span>Penjualan</span>
+          </div>
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'jenisPohon',
@@ -31,51 +46,27 @@ export const columnsTree: ColumnDef<Tree>[] = [
     header: 'Aksesi',
   },
   {
-    accessorKey: 'lokasi',
-    header: 'Lokasi',
-  },
-  {
-    accessorKey: 'tanggalPenanaman',
-    header: ({ column }) => {
+    accessorKey: 'jumlahPenjualan',
+    header: ({}) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <div className="flex flex-col text-left">
-            <span>Tanggal</span>
-            <span>Penanaman</span>
-          </div>
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex flex-col text-left">
+          <span>Jumlah</span>
+          <span>Penjualan (kg)</span>
+        </div>
       );
     },
   },
   {
-    accessorKey: 'tanggalPemangkasan',
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <div className="flex flex-col text-left">
-            <span>Tanggal</span>
-            <span>Pemangkasan</span>
-          </div>
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: 'harga',
+    header: 'Harga per kg',
   },
   {
-    accessorKey: 'pemupukanTerakhir',
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <div className="flex flex-col text-left">
-            <span>Pemupukan</span>
-            <span>Terakhir</span>
-          </div>
-
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: 'totalPendapatan',
+    header: 'Total Pendapatan',
+  },
+  {
+    accessorKey: 'keterangan',
+    header: 'Keterangan',
   },
   {
     id: 'actions',

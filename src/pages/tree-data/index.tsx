@@ -4,7 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { dummyDataPohon } from '@/data/dummyDataPohon';
-import { Tree, columns } from '@/pages/tree-data/tabel-tree';
+import { Tree, columnsTree } from '@/pages/tree-data/tabel-tree';
 
 async function getData(): Promise<Tree[]> {
   return dummyDataPohon;
@@ -23,9 +23,8 @@ const TreeDataPage = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Data Tanaman</h1>
-      <DataTable columns={columns} data={data} rowsPerPage={10} />
+    <div className="p-3 h-auto">
+      <DataTable columns={columnsTree} data={data} rowsPerPage={10} title="Tabel Data Pohon" description="Tabel data tanaman kopi dan durian Desa Brongkol" />
     </div>
   );
 };

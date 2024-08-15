@@ -9,21 +9,37 @@ import Scaless from '../../public/scaless.svg';
 import { DollarSignIcon } from 'lucide-react';
 import CustomCard from '@/components/ui/CustomCard';
 import { formatNumber } from '@/utils/formatNumber';
-import { Tree, columns } from '@/pages/tree-data/tabel-tree';
+import { Tree, columnsTree } from '@/pages/tree-data/tabel-tree';
+import { Sales, columnsSales } from '@/pages/sales-data/tabel-sales';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { dummyDataPohon } from '@/data/dummyDataPohon';
+import { dummyDataPenjualan } from '@/data/dumyDataPenjualan';
 
-async function getData(): Promise<Tree[]> {
-  return dummyDataPohon;
+type CombinedData = {
+  trees: Tree[];
+  sales: Sales[];
+};
+
+async function getData(): Promise<CombinedData> {
+  return {
+    trees: dummyDataPohon,
+    sales: dummyDataPenjualan,
+  };
 }
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<Tree[]>([]);
+  const [dataPohon, setDataPohon] = useState<Tree[]>([]);
+  const [dataPenjualan, setDataPenjualan] = useState<Sales[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getData();
-      setData(result);
+      try {
+        const result: CombinedData = await getData();
+        setDataPohon(result.trees);
+        setDataPenjualan(result.sales);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
     fetchData();
@@ -70,8 +86,13 @@ const Home: React.FC = () => {
       </div>
 
       {/* Tabel Rekap Pohon Durian dan Kopi */}
-      <div className="mx-auto py-10">
-        <DataTable columns={columns} data={data} rowsPerPage={5} />
+      <div className="mx-auto pt-10">
+        <DataTable columns={columnsTree} data={dataPohon} rowsPerPage={5} title="Rekap Data Pohon" description="Rekapitulasi data tanaman kopi dan durian Desa Brongkol" />
+      </div>
+
+      {/* Tabel Rekap Penjualan */}
+      <div className="mx-auto pt-10 pb-5">
+        <DataTable columns={columnsSales} data={dataPenjualan} rowsPerPage={5} title="Rekap Data Penjualan" description="Rekapitulasi data penjualan Desa Brongkol" />
       </div>
     </div>
   );
