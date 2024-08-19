@@ -6,6 +6,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/router';
 
 export type Sales = {
   id: string;
@@ -71,7 +72,12 @@ export const columnsSales: ColumnDef<Sales>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original;
+      const sales = row.original;
+      const router = useRouter();
+
+      const handleDetail = () => {
+        router.push(`/sales-data/${sales.id}`);
+      };
 
       return (
         <DropdownMenu>
@@ -83,10 +89,10 @@ export const columnsSales: ColumnDef<Sales>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDetail}>Detail</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

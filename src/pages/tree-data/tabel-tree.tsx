@@ -6,6 +6,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/router';
 
 export type Tree = {
   id: string;
@@ -80,7 +81,12 @@ export const columnsTree: ColumnDef<Tree>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original;
+      const tree = row.original;
+      const router = useRouter();
+
+      const handleDetailClick = () => {
+        router.push(`/tree-data/${tree.id}`);
+      };
 
       return (
         <DropdownMenu>
@@ -92,10 +98,10 @@ export const columnsTree: ColumnDef<Tree>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDetailClick}>Detail</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

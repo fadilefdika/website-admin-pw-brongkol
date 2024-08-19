@@ -16,8 +16,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     const pathTitles: Record<string, string> = {
       '/': 'Dashboard',
-      '/tree-data': 'Data Tanaman',
+      '/tree-data': 'Data Pohon',
       '/sales-data': 'Data Penjualan',
+      '/tree-data/[id]': 'Detail Pohon',
+      '/sales-data/[id]': 'Detail Penjualan',
     };
 
     setTitle(pathTitles[router.pathname] || 'Dashboard');

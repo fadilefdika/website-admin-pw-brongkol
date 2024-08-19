@@ -23,7 +23,7 @@ const TreeDataPage = () => {
   }, []);
 
   return (
-    <div className="p-3 h-auto">
+    <div className="p-3 min-h-full">
       <DataTable columns={columnsTree} data={data} rowsPerPage={10} title="Tabel Data Pohon" description="Tabel data tanaman kopi dan durian Desa Brongkol" />
     </div>
   );
