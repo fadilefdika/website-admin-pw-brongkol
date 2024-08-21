@@ -36,9 +36,6 @@ const DetailSalesPage: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p>
-                <strong>ID:</strong> {sales.id}
-              </p>
-              <p>
                 <strong>Tanggal Penjualan :</strong> {sales.tanggalPenjualan}
               </p>
               <p>

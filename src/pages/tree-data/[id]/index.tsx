@@ -51,9 +51,6 @@ const DetailTreePage: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p>
-                <strong>ID:</strong> {tree.id}
-              </p>
-              <p>
                 <strong>Jenis Pohon:</strong> {tree.jenisPohon}
               </p>
               <p>

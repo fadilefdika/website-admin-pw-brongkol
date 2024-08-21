@@ -5,6 +5,7 @@ import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRende
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DialogDemo } from '@/components/ui/Modal';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -12,12 +13,14 @@ interface DataTableProps<TData, TValue> {
   rowsPerPage: number;
   title: string;
   description: string;
+  nameButton: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data, rowsPerPage, description, title }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, rowsPerPage, description, title, nameButton }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -51,11 +54,14 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
         </div>
         <div>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
+            <div className="flex gap-2">
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DialogDemo />
+            </div>
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
