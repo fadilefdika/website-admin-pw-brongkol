@@ -78,10 +78,10 @@ export function ModalTambahPohon() {
         </div>
 
         <div className="mt-5">
-          <Label htmlFor="catatan" className="mb-3">
+          <Label htmlFor="catatan" className="mb-4">
             Catatan Tambahan
           </Label>
-          <Textarea id="catatan" className="w-1/2" />
+          <Textarea id="catatan" className="w-1/2 mt-2" />
         </div>
 
         <DialogFooter className="mt-5">

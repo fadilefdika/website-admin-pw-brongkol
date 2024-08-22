@@ -13,9 +13,9 @@ export type Tree = {
   jenisPohon: string;
   aksesi: string;
   lokasi: string;
-  tanggalPenanaman: string;
-  tanggalPemangkasan: string;
-  pemupukanTerakhir: string;
+  tanggalPenanaman: String;
+  tanggalPemangkasan: String;
+  pemupukanTerakhir: String;
 };
 
 export const columnsTree: ColumnDef<Tree>[] = [

@@ -1,7 +1,18 @@
-export const dummyDataPenjualan = [
+export type Sales = {
+  id: string;
+  tanggalPenjualan: string; // Mengubah tipe data menjadi string
+  jenisPohon: string;
+  aksesi: string;
+  jumlahPenjualan: number;
+  harga: number;
+  totalPendapatan: number;
+  keterangan: string;
+};
+
+export const dummyDataPenjualan: Sales[] = [
   {
     id: '728ed52f-1',
-    tanggalPenjualan: '2024-11-01',
+    tanggalPenjualan: new Date('2024-11-01').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Durian',
     aksesi: 'Monthong',
     jumlahPenjualan: 15,
@@ -11,7 +22,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-2',
-    tanggalPenjualan: '2024-11-05',
+    tanggalPenjualan: new Date('2024-11-05').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Kopi',
     aksesi: 'Arabica',
     jumlahPenjualan: 20,
@@ -21,7 +32,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-3',
-    tanggalPenjualan: '2024-11-10',
+    tanggalPenjualan: new Date('2024-11-10').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Durian',
     aksesi: 'Monthong',
     jumlahPenjualan: 12,
@@ -31,7 +42,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-4',
-    tanggalPenjualan: '2024-11-15',
+    tanggalPenjualan: new Date('2024-11-15').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Kopi',
     aksesi: 'Robusta',
     jumlahPenjualan: 25,
@@ -41,7 +52,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-5',
-    tanggalPenjualan: '2024-11-20',
+    tanggalPenjualan: new Date('2024-11-20').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Durian',
     aksesi: 'Monthong',
     jumlahPenjualan: 18,
@@ -51,7 +62,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-6',
-    tanggalPenjualan: '2024-11-22',
+    tanggalPenjualan: new Date('2024-11-22').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Kopi',
     aksesi: 'Arabica',
     jumlahPenjualan: 30,
@@ -61,7 +72,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-7',
-    tanggalPenjualan: '2024-11-25',
+    tanggalPenjualan: new Date('2024-11-25').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Durian',
     aksesi: 'Monthong',
     jumlahPenjualan: 10,
@@ -71,7 +82,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-8',
-    tanggalPenjualan: '2024-11-28',
+    tanggalPenjualan: new Date('2024-11-28').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Kopi',
     aksesi: 'Robusta',
     jumlahPenjualan: 40,
@@ -81,7 +92,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-9',
-    tanggalPenjualan: '2024-12-01',
+    tanggalPenjualan: new Date('2024-12-01').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Durian',
     aksesi: 'Monthong',
     jumlahPenjualan: 14,
@@ -91,7 +102,7 @@ export const dummyDataPenjualan = [
   },
   {
     id: '728ed52f-10',
-    tanggalPenjualan: '2024-12-05',
+    tanggalPenjualan: new Date('2024-12-05').toLocaleDateString('id-ID'),
     jenisPohon: 'Pohon Kopi',
     aksesi: 'Arabica',
     jumlahPenjualan: 35,

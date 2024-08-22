@@ -20,7 +20,6 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  console.log('Type prop:', title); // Debugging
 
   const table = useReactTable({
     data,
