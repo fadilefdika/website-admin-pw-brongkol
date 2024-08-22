@@ -15,7 +15,6 @@ const DetailTreePage: React.FC = () => {
     return <div>Data tidak ditemukan</div>;
   }
 
-  const [qrCodeValue, setQrCodeValue] = React.useState('');
   const generateQRCode = () => {
     alert('sudah tergenerate');
   };

@@ -5,7 +5,8 @@ import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRende
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { DialogDemo } from '@/components/ui/Modal';
+import { ModalTambahPohon } from '@/components/ui/ModalTambahPohon';
+import { ModalTambahPenjualan } from './ModalTambahPenjualan';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -13,14 +14,13 @@ interface DataTableProps<TData, TValue> {
   rowsPerPage: number;
   title: string;
   description: string;
-  nameButton: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data, rowsPerPage, description, title, nameButton }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, rowsPerPage, description, title }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  console.log('Type prop:', title); // Debugging
 
   const table = useReactTable({
     data,
@@ -45,6 +45,16 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
     },
   });
 
+  const renderModal = () => {
+    if (title === 'Rekap Data Penjualan' || title === 'Tabel Data Penjualan') {
+      return <ModalTambahPenjualan />;
+    } else if (title === 'Rekap Data Pohon' || title === 'Tabel Data Pohon') {
+      return <ModalTambahPohon />;
+    } else {
+      return null; // Optional: Handle unexpected  values
+    }
+  };
+
   return (
     <div className="bg-white shadow-md pt-2 pb-4 px-6 w-auto rounded-xl">
       <div className="flex flex-row justify-between py-5">
@@ -60,7 +70,7 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
                   Columns
                 </Button>
               </DropdownMenuTrigger>
-              <DialogDemo />
+              {renderModal()}
             </div>
             <DropdownMenuContent align="end">
               {table

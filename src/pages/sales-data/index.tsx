@@ -23,7 +23,7 @@ const SalesDataPage = () => {
 
   return (
     <div className="p-3 h-auto">
-      <DataTable columns={columnsSales} data={data} rowsPerPage={10} title="Tabel Data Penjualan" description="Tabel data penjualan Desa Brongkol" nameButton="Tambah Data Penjualan" />
+      <DataTable columns={columnsSales} data={data} rowsPerPage={10} title="Tabel Data Penjualan" description="Tabel data penjualan Desa Brongkol" />
     </div>
   );
 };

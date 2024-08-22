@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { dummyDataPenjualan } from '@/data/dumyDataPenjualan';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Breadcrumb, BreadcrumbSeparator, BreadcrumbItem, BreadcrumbList, BreadcrumbLink, BreadcrumbPage } from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
 
 const DetailSalesPage: React.FC = () => {
   const router = useRouter();
