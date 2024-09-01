@@ -4,6 +4,8 @@ import { dummyDataPohon } from '@/data/dummyDataPohon';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Breadcrumb, BreadcrumbSeparator, BreadcrumbItem, BreadcrumbList, BreadcrumbLink, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import BreadcrumbCustom from '@/components/ui/BreadcrumbCustom';
+import RiwayatCard from '@/components/ui/RiwayatCard';
 
 const DetailTreePage: React.FC = () => {
   const router = useRouter();
@@ -20,19 +22,9 @@ const DetailTreePage: React.FC = () => {
   };
 
   return (
-    <div className="p-3 h-screen">
+    <div className="p-3 min-h-min">
       <div className="flex flex-col gap-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/tree-data">Data Pohon</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Detail Pohon</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <BreadcrumbCustom title="Data Pohon" href="/tree-data" curentPage="Detail Pohon" />
         <div className="flex flex-row gap-4 ">
           <Card className="flex-1">
             <CardHeader>
@@ -70,6 +62,7 @@ const DetailTreePage: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+        <RiwayatCard namaPetani={tree.namaPetani} />
       </div>
     </div>
   );

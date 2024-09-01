@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { dummyDataPenjualan } from '@/data/dumyDataPenjualan';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Breadcrumb, BreadcrumbSeparator, BreadcrumbItem, BreadcrumbList, BreadcrumbLink, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import BreadcrumbCustom from '@/components/ui/BreadcrumbCustom';
 
 const DetailSalesPage: React.FC = () => {
   const router = useRouter();
@@ -15,19 +15,9 @@ const DetailSalesPage: React.FC = () => {
   }
 
   return (
-    <div className="p-3 h-screen">
+    <div className="p-3 min-h-full">
       <div className="flex flex-col gap-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/tree-data">Data Penjualan</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Detail Penjualan</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <BreadcrumbCustom title="Data Penjualan" href="/sales-data" curentPage="Detail Penjualan" />
         <div className="flex flex-row gap-4 ">
           <Card className="flex-1 h-max">
             <CardHeader>

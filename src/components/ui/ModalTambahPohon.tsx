@@ -8,20 +8,50 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Textarea } from './textarea';
 
-export function ModalTambahPohon() {
-  const [date, setDate] = useState<Date>();
+export function ModalTambahPohon({ editData }: { editData?: any }) {
+  const [date, setDate] = useState<Date | undefined>(editData?.tanggalPenanaman || undefined);
+  const [pohon, setPohon] = useState(editData?.pohon || '');
+  const [aksesi, setAksesi] = useState(editData?.aksesi || '');
+  const [lokasi, setLokasi] = useState(editData?.lokasi || '');
+  const [catatan, setCatatan] = useState(editData?.catatan || '');
+
+  // Fungsi untuk mereset form
+  const handleReset = () => {
+    setDate(undefined);
+    setPohon('');
+    setAksesi('');
+    setLokasi('');
+    setCatatan('');
+  };
+
+  // Update state jika data untuk edit tersedia
+  useEffect(() => {
+    if (editData) {
+      setDate(editData.tanggalPenanaman || undefined);
+      setPohon(editData.pohon || '');
+      setAksesi(editData.aksesi || '');
+      setLokasi(editData.lokasi || '');
+      setCatatan(editData.catatan || '');
+    }
+  }, [editData]);
+
+  const handleSubmit = () => {
+    // Logika untuk menyimpan data
+    // Jika `editData` ada, maka simpan perubahan, jika tidak maka tambahkan data baru
+    console.log({ pohon, aksesi, date, lokasi, catatan });
+  };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Tambah Data Pohon</Button>
+        <Button variant="default">{editData ? 'Edit Data Pohon' : 'Tambah Data Pohon'}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Tambah Data Pohon</DialogTitle>
+          <DialogTitle>{editData ? 'Edit Data Pohon' : 'Tambah Data Pohon'}</DialogTitle>
           <DialogDescription>
             Tambahkan data pohon durian atau kopi dengan informasi lengkap seperti jenis tanaman, tipe varietas, lokasi, tanggal penanaman, tanggal pemangkasan, dan pemupukan terakhir untuk memantau dan mengelola kebun secara efektif.
           </DialogDescription>
@@ -32,7 +62,7 @@ export function ModalTambahPohon() {
             <Label htmlFor="select" className="mb-3">
               Pilih Pohon
             </Label>
-            <Select>
+            <Select value={pohon} onValueChange={setPohon}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Pilih Pohon" />
               </SelectTrigger>
@@ -49,7 +79,7 @@ export function ModalTambahPohon() {
             <Label htmlFor="aksesi" className="mb-3">
               Aksesi
             </Label>
-            <Input id="aksesi" className="w-full" />
+            <Input id="aksesi" value={aksesi} onChange={(e) => setAksesi(e.target.value)} className="w-full" />
           </div>
 
           <div className="flex flex-col">
@@ -64,7 +94,7 @@ export function ModalTambahPohon() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                <Calendar mode="single" selected={date} onSelect={(selectedDate) => setDate(selectedDate || undefined)} initialFocus />
               </PopoverContent>
             </Popover>
           </div>
@@ -73,7 +103,7 @@ export function ModalTambahPohon() {
             <Label htmlFor="lokasi" className="mb-3">
               Lokasi
             </Label>
-            <Input id="lokasi" className="w-full" />
+            <Input id="lokasi" value={lokasi} onChange={(e) => setLokasi(e.target.value)} className="w-full" />
           </div>
         </div>
 
@@ -81,11 +111,16 @@ export function ModalTambahPohon() {
           <Label htmlFor="catatan" className="mb-4">
             Catatan Tambahan
           </Label>
-          <Textarea id="catatan" className="w-1/2 mt-2" />
+          <Textarea id="catatan" value={catatan} onChange={(e) => setCatatan(e.target.value)} className="w-1/2 mt-2" />
         </div>
 
         <DialogFooter className="mt-5">
-          <Button type="submit">Simpan Perubahan</Button>
+          <Button variant="outline" onClick={handleReset}>
+            Reset
+          </Button>
+          <Button type="submit" onClick={handleSubmit}>
+            {editData ? 'Simpan Perubahan' : 'Tambah Pohon'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
