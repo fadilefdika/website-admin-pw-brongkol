@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border" id="tabel-utama">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

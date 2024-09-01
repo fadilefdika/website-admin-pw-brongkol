@@ -8,14 +8,23 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/router';
 
+interface RiwayatKegiatan {
+  id: string;
+  treeId: string; // ID pohon terkait
+  namaPetani: string;
+  tanggalKegiatan: string;
+  deskripsi: string;
+}
+
 export type Tree = {
   id: string;
   jenisPohon: string;
   aksesi: string;
   lokasi: string;
-  tanggalPenanaman: String;
-  tanggalPemangkasan: String;
-  pemupukanTerakhir: String;
+  tanggalPenanaman: Date;
+  tanggalPemangkasan: Date;
+  pemupukanTerakhir: Date;
+  riwayatKegiatan: RiwayatKegiatan[];
 };
 
 export const columnsTree: ColumnDef<Tree>[] = [

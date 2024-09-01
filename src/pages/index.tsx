@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
 import React from 'react';
+import { useTreeData } from '@/context/TreeDataContext';
 import Durian from '../../public/durian.svg';
 import Cofeee from '../../public/coffee.svg';
 import Bullish from '../../public/bullish.svg';
@@ -9,41 +9,16 @@ import Scaless from '../../public/scaless.svg';
 import { DollarSignIcon } from 'lucide-react';
 import CustomCard from '@/components/ui/CustomCard';
 import { formatNumber } from '@/utils/formatNumber';
-import { Tree, columnsTree } from '@/pages/tree-data/tabel-tree';
-import { Sales, columnsSales } from '@/pages/sales-data/tabel-sales';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
-import { dummyDataPohon } from '@/data/dummyDataPohon';
-import { dummyDataPenjualan } from '@/data/dumyDataPenjualan';
-
-type CombinedData = {
-  trees: Tree[];
-  sales: Sales[];
-};
-
-async function getData(): Promise<CombinedData> {
-  return {
-    trees: dummyDataPohon,
-    sales: dummyDataPenjualan,
-  };
-}
+import { columnsTree } from '@/pages/tree-data/tabel-tree';
+// import { columnsSales } from '@/pages/sales-data/tabel-sales';
 
 const Home: React.FC = () => {
-  const [dataPohon, setDataPohon] = useState<Tree[]>([]);
-  const [dataPenjualan, setDataPenjualan] = useState<Sales[]>([]);
+  const { data: dataPohon, loading, error } = useTreeData();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result: CombinedData = await getData();
-        setDataPohon(result.trees);
-        setDataPenjualan(result.sales);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
-    fetchData();
-  }, []);
   return (
     <div className="mx-auto p-3">
       <div className="flex flex-col gap-6">
@@ -52,7 +27,7 @@ const Home: React.FC = () => {
           <CustomCard className="w-[280px]" title="Jumlah Blok Tanaman Kopi" description="22 November 2024" content={formatNumber(12)} trees={<Cofeee className="w-6 h-6" />} indicator={<Bullish className="w-6 h-6" />} percentage={10} />
           <CustomCard
             className="w-[340px]"
-            title="Total Pendapatan Saat ini "
+            title="Total Pendapatan Saat ini"
             description="22 November 2024"
             prefix="Rp"
             content={formatNumber(5000000)}
@@ -91,9 +66,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Tabel Rekap Penjualan */}
-      <div className="mx-auto pt-10 pb-5">
-        <DataTable columns={columnsSales} data={dataPenjualan} rowsPerPage={5} title="Rekap Data Penjualan" description="Rekapitulasi data penjualan Desa Brongkol" />
-      </div>
+      <div className="mx-auto pt-10 pb-5">{/* <DataTable columns={columnsSales} data={dataPenjualan} rowsPerPage={5} title="Rekap Data Penjualan" description="Rekapitulasi data penjualan Desa Brongkol" /> */}</div>
     </div>
   );
 };
