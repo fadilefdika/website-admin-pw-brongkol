@@ -1,13 +1,27 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { Tree } from '@/pages/tree-data/tabel-tree';
+import { Tree } from '@/types/tree';
 import { getPohonData } from '@/lib/firestoreService';
-import { collection, doc, getDoc, getDocs, Timestamp } from '@firebase/firestore';
+import { collection, doc, getDocs, Timestamp } from 'firebase/firestore';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 import db from '@/lib/firebase';
 
 interface TreeDataContextType {
   data: Tree[];
   loading: boolean;
   error: string | null;
+}
+
+function formatTimestamp(timestamp: Timestamp): string {
+  const date = timestamp.toDate();
+  return format(date, 'd MMMM yyyy', { locale: id });
+}
+
+// Fungsi untuk mengambil data riwayatKegiatan dari subkoleksi
+async function getRiwayatKegiatan(treeId: string) {
+  const riwayatKegiatanRef = collection(doc(db, 'Trees', treeId), 'riwayatKegiatan');
+  const querySnapshot = await getDocs(riwayatKegiatanRef);
+  return querySnapshot.docs.map((doc) => doc.data());
 }
 
 export const TreeDataContext = createContext<TreeDataContextType | undefined>(undefined);
@@ -17,25 +31,25 @@ export const TreeDataProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  function convertTimestampToDate(timestamp: Timestamp): Date {
-    return timestamp.toDate();
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await getPohonData(); // Mengambil data dari Firestore
+        const trees = await getPohonData(); // Mengambil data dari Firestore
 
-        const formattedData: Tree[] = result.map((item: any) => {
-          return {
-            ...item,
-            tanggalPenanaman: convertTimestampToDate(item.tanggalPenanaman as Timestamp),
-            tanggalPemangkasan: item.tanggalPemangkasan ? convertTimestampToDate(item.tanggalPemangkasan as Timestamp) : undefined,
-            pemupukanTerakhir: item.pemupukanTerakhir ? convertTimestampToDate(item.pemupukanTerakhir as Timestamp) : undefined,
-            riwayatKegiatan: [], // Placeholder untuk riwayatKegiatan yang mungkin akan diisi nanti
-          };
-        });
+        // Ambil data riwayatKegiatan untuk setiap pohon
+        const formattedData = await Promise.all(
+          trees.map(async (tree: any) => {
+            const riwayatKegiatan = await getRiwayatKegiatan(tree.id); // Ganti dengan ID yang sesuai
+            return {
+              ...tree,
+              tanggalPenanaman: tree.tanggalPenanaman ? formatTimestamp(tree.tanggalPenanaman) : null,
+              tanggalPemangkasan: tree.tanggalPemangkasan ? formatTimestamp(tree.tanggalPemangkasan) : null,
+              pemupukanTerakhir: tree.pemupukanTerakhir ? formatTimestamp(tree.pemupukanTerakhir) : null,
+              riwayatKegiatan,
+            };
+          })
+        );
 
         setData(formattedData);
       } catch (err) {
@@ -48,36 +62,6 @@ export const TreeDataProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     fetchData();
   }, []);
-
-  const getRiwayatKegiatan = async (treeId: string) => {
-    try {
-      const treeDocRef = doc(db, 'Trees', treeId);
-      const treeDocSnapshot = await getDoc(treeDocRef);
-
-      if (!treeDocSnapshot.exists()) {
-        console.log('Dokumen tidak ditemukan!');
-        return [];
-      }
-
-      const riwayatKegiatanRef = collection(treeDocRef, 'riwayatKegiatan');
-      const riwayatKegiatanSnapshot = await getDocs(riwayatKegiatanRef);
-
-      if (riwayatKegiatanSnapshot.empty) {
-        console.log('Subkoleksi riwayatKegiatan kosong!');
-        return [];
-      }
-
-      return riwayatKegiatanSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        treeId,
-        ...(doc.data() as Omit<Tree['riwayatKegiatan'][number], 'id' | 'treeId'>), // pastikan data yang dikembalikan sesuai dengan RiwayatKegiatan
-        tanggalKegiatan: convertTimestampToDate(doc.data().tanggalKegiatan as Timestamp),
-      }));
-    } catch (error) {
-      console.error('Error fetching riwayat kegiatan:', error);
-      return [];
-    }
-  };
 
   return <TreeDataContext.Provider value={{ data, loading, error }}>{children}</TreeDataContext.Provider>;
 };

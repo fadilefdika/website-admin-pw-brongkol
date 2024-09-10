@@ -11,6 +11,8 @@ import CustomCard from '@/components/ui/CustomCard';
 import { formatNumber } from '@/utils/formatNumber';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { columnsTree } from '@/pages/tree-data/tabel-tree';
+import { columnsSales } from './sales-data/tabel-sales';
+import { dummyDataPenjualan } from '@/data/dummyDataPenjualan';
 // import { columnsSales } from '@/pages/sales-data/tabel-sales';
 
 const Home: React.FC = () => {
@@ -66,7 +68,9 @@ const Home: React.FC = () => {
       </div>
 
       {/* Tabel Rekap Penjualan */}
-      <div className="mx-auto pt-10 pb-5">{/* <DataTable columns={columnsSales} data={dataPenjualan} rowsPerPage={5} title="Rekap Data Penjualan" description="Rekapitulasi data penjualan Desa Brongkol" /> */}</div>
+      <div className="mx-auto pt-10 pb-5">
+        <DataTable columns={columnsSales} data={dummyDataPenjualan} rowsPerPage={5} title="Rekap Data Penjualan" description="Rekapitulasi data penjualan Desa Brongkol" />
+      </div>
     </div>
   );
 };

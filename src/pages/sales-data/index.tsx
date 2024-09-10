@@ -3,7 +3,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
-import { dummyDataPenjualan } from '@/data/dumyDataPenjualan';
+import { dummyDataPenjualan } from '@/data/dummyDataPenjualan';
 import { Sales, columnsSales } from '@/pages/sales-data/tabel-sales';
 
 async function getData(): Promise<Sales[]> {
