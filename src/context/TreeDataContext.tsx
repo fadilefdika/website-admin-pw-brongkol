@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Tree } from '@/types/tree';
-import { getPohonData } from '@/lib/firestoreService';
+import { getPohonData } from '@/lib/firestoreServiceTree';
 import { collection, doc, getDocs, Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';

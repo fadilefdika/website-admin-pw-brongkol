@@ -14,6 +14,10 @@ export const columnsTree: ColumnDef<Tree>[] = [
     accessorFn: (_, index) => index + 1,
   },
   {
+    accessorKey: 'namaPetani',
+    header: 'Nama Petani',
+  },
+  {
     accessorKey: 'jenisPohon',
     header: 'Jenis Pohon',
   },
@@ -90,8 +94,6 @@ export const columnsTree: ColumnDef<Tree>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={handleDetailClick}>Detail</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

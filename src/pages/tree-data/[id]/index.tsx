@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import BreadcrumbCustom from '@/components/ui/BreadcrumbCustom';
 import RiwayatCard from '@/components/ui/RiwayatCard';
 import { TreeDataContext } from '@/context/TreeDataContext';
+import { ModalPohon } from '@/components/ui/ModalPohon';
 import { collection, getDocs, doc } from 'firebase/firestore';
 import db from '@/lib/firebase';
-import { Timestamp } from 'firebase/firestore'; // Import Timestamp
+import { Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { id as idLocale } from 'date-fns/locale'; // Correctly import and use locale
+import { id as idLocale } from 'date-fns/locale';
 
 interface TreeData {
   id: string;
@@ -23,9 +24,9 @@ interface TreeData {
 
 interface RiwayatKegiatan {
   id: string;
-  namaPetani: string;
-  deskripsi: string;
+  jenisKegiatan: string;
   tanggalKegiatan: Timestamp | string;
+  deskripsiKegiatan: string;
 }
 
 const DetailTreePage: React.FC = () => {
@@ -35,6 +36,7 @@ const DetailTreePage: React.FC = () => {
 
   const [riwayatKegiatan, setRiwayatKegiatan] = useState<RiwayatKegiatan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   if (!context) {
     return <p>Context error</p>;
@@ -42,7 +44,6 @@ const DetailTreePage: React.FC = () => {
 
   const { data } = context;
 
-  // Ensure id is a string before using it to find data
   const treeData = typeof id === 'string' ? data.find((tree) => tree.id === id) : undefined;
 
   useEffect(() => {
@@ -84,17 +85,15 @@ const DetailTreePage: React.FC = () => {
       return 'Tanggal tidak valid';
     }
 
-    // Check if the date is valid
     if (isNaN(date.getTime())) {
       return 'Tanggal tidak valid';
     }
 
-    // Format date to 'd MMMM yyyy'
     return format(date, 'd MMMM yyyy', { locale: idLocale }); // Use the locale object here
   };
 
   return (
-    <div className="p-3 min-h-min">
+    <div className="p-3 min-h-dvh">
       <div className="flex flex-col gap-4">
         <BreadcrumbCustom title="Data Pohon" href="/tree-data" curentPage="Detail Pohon" />
         <div className="flex flex-row gap-4">
@@ -109,33 +108,34 @@ const DetailTreePage: React.FC = () => {
             </CardContent>
           </Card>
           <Card className="flex-1 h-max">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Detail Pohon</CardTitle>
+              <ModalPohon editData={treeData} />
             </CardHeader>
             <CardContent>
               {treeData ? (
-                <>
-                  <p>
-                    <strong>Jenis Pohon:</strong> {treeData.jenisPohon}
-                  </p>
-                  <p>
-                    <strong>Aksesi:</strong> {treeData.aksesi}
-                  </p>
-                  <p>
-                    <strong>Lokasi:</strong> {treeData.lokasi}
-                  </p>
-                  <p>
-                    <strong>Tanggal Penanaman:</strong> {formatTanggal(treeData.tanggalPenanaman)}
-                  </p>
-                  <p>
-                    <strong>Tanggal Pemangkasan:</strong> {formatTanggal(treeData.tanggalPemangkasan)}
-                  </p>
-                  <p>
-                    <strong>Pemupukan Terakhir:</strong> {formatTanggal(treeData.pemupukanTerakhir)}
-                  </p>
-                </>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Nama Petani', value: treeData.namaPetani },
+                    { label: 'Jenis Pohon', value: treeData.jenisPohon },
+                    { label: 'Aksesi', value: treeData.aksesi },
+                    { label: 'Lokasi', value: treeData.lokasi },
+                    { label: 'Tanggal Penanaman', value: formatTanggal(treeData.tanggalPenanaman) },
+                    { label: 'Tanggal Pemangkasan', value: formatTanggal(treeData.tanggalPemangkasan) },
+                    { label: 'Pemupukan Terakhir', value: formatTanggal(treeData.pemupukanTerakhir) },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center px-3 py-1 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                      <div className="w-1/3">
+                        <span className="text-sm font-medium text-gray-600">{item.label}:</span>
+                      </div>
+                      <div className="w-2/3">
+                        <span className="text-base text-gray-800">{item.value}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <p>Data pohon tidak ditemukan</p>
+                <p className="text-center text-gray-500 italic">Data pohon tidak ditemukan</p>
               )}
             </CardContent>
           </Card>
@@ -143,7 +143,15 @@ const DetailTreePage: React.FC = () => {
         {loading ? (
           <p>Loading riwayat kegiatan...</p>
         ) : riwayatKegiatan.length > 0 ? (
-          riwayatKegiatan.map((kegiatan) => <RiwayatCard key={kegiatan.id} namaPetani={kegiatan.namaPetani} deskripsiKegiatan={kegiatan.deskripsi} tanggalKegiatan={formatTanggal(kegiatan.tanggalKegiatan)} />)
+          riwayatKegiatan.map((kegiatan) => {
+            console.log('Kegiatan:', {
+              id: kegiatan.id,
+              jenisKegiatan: kegiatan.jenisKegiatan,
+              deskripsiKegiatan: kegiatan.deskripsiKegiatan,
+              tanggalKegiatan: kegiatan.tanggalKegiatan,
+            });
+            return <RiwayatCard key={kegiatan.id} jenisKegiatan={kegiatan.jenisKegiatan} deskripsiKegiatan={kegiatan.deskripsiKegiatan} tanggalKegiatan={formatTanggal(kegiatan.tanggalKegiatan)} />;
+          })
         ) : (
           <p>Belum ada riwayat kegiatan untuk pohon ini.</p>
         )}

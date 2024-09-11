@@ -5,7 +5,7 @@ import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRende
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ModalTambahPohon } from '@/components/ui/ModalTambahPohon';
+import { ModalPohon } from '@/components/ui/ModalPohon';
 import { ModalTambahPenjualan } from './ModalTambahPenjualan';
 
 interface DataTableProps<TData, TValue> {
@@ -48,9 +48,9 @@ export function DataTable<TData, TValue>({ columns, data, rowsPerPage, descripti
     if (title === 'Rekap Data Penjualan' || title === 'Tabel Data Penjualan') {
       return <ModalTambahPenjualan />;
     } else if (title === 'Rekap Data Pohon' || title === 'Tabel Data Pohon') {
-      return <ModalTambahPohon />;
+      return <ModalPohon />;
     } else {
-      return null; // Optional: Handle unexpected  values
+      return null;
     }
   };
 

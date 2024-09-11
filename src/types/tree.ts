@@ -1,13 +1,15 @@
+import { Timestamp } from 'firebase/firestore';
+
 interface RiwayatKegiatan {
   id: string;
-  treeId: string;
-  namaPetani: string;
-  tanggalKegiatan: string;
-  deskripsi: string;
+  jenisKegiatan: string;
+  tanggalKegiatan: Timestamp | string;
+  deskripsiKegiatan: string;
 }
 
 export type Tree = {
   id: string;
+  namaPetani: string;
   jenisPohon: string;
   aksesi: string;
   lokasi: string;
