@@ -82,11 +82,11 @@ const DetailTreePage: React.FC = () => {
     } else if (dateInput instanceof Date) {
       date = dateInput;
     } else {
-      return 'Tanggal tidak valid';
+      return 'Kegiatan belum dilakukan';
     }
 
     if (isNaN(date.getTime())) {
-      return 'Tanggal tidak valid';
+      return 'Kegiatan belum dilakukan';
     }
 
     return format(date, 'd MMMM yyyy', { locale: idLocale }); // Use the locale object here

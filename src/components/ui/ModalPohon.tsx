@@ -6,25 +6,23 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './select';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from './textarea';
 import { addPohonData, updatePohonData } from '@/lib/firestoreServiceTree';
-import { Timestamp } from 'firebase/firestore';
 
 export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataChange?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(editData?.tanggalPenanaman && typeof editData.tanggalPenanaman.toDate === 'function' ? editData.tanggalPenanaman.toDate() : undefined);
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [namaPetani, setNamaPetani] = useState(editData?.namaPetani || '');
   const [jenisPohon, setJenisPohon] = useState(editData?.jenisPohon || '');
   const [aksesi, setAksesi] = useState(editData?.aksesi || '');
   const [lokasi, setLokasi] = useState(editData?.lokasi || '');
   const [catatan, setCatatan] = useState(editData?.catatan || '');
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     if (editData) {
-      setDate(editData.tanggalPenanaman && typeof editData.tanggalPenanaman.toDate === 'function' ? editData.tanggalPenanaman.toDate() : undefined);
+      setDate(editData.tanggalPenanaman instanceof Date ? editData.tanggalPenanaman : undefined);
       setNamaPetani(editData.namaPetani || '');
       setJenisPohon(editData.jenisPohon || '');
       setAksesi(editData.aksesi || '');
@@ -53,7 +51,7 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
       jenisPohon,
       aksesi,
       lokasi,
-      tanggalPenanaman: Timestamp.fromDate(date),
+      tanggalPenanaman: date,
       catatan,
     };
 
@@ -66,7 +64,7 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
       setIsOpen(false);
       handleReset();
       if (onDataChange) {
-        onDataChange(); // Trigger data reload
+        onDataChange();
       }
     } catch (error) {
       console.error('Error saving tree data:', error);
@@ -119,21 +117,30 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
             <Input id="aksesi" value={aksesi} onChange={(e) => setAksesi(e.target.value)} className="w-full" />
           </div>
 
-          <div className="flex flex-col">
-            <Label htmlFor="tanggal-penanaman" className="mb-3">
-              Tanggal Penanaman
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className={cn('w-full justify-start text-left font-normal', !date && 'text-muted-foreground')}>
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, 'PPP') : <span>Pilih tanggal</span>}
+          <div className="space-y-2">
+            <Label htmlFor="tanggal-penanaman">Tanggal Penanaman</Label>
+            <div className="relative">
+              <div className="flex">
+                <Input type="text" id="tanggal-penanaman" placeholder="Pilih tanggal" value={date ? format(date, 'dd/MM/yyyy') : ''} readOnly className="w-full pr-10" onFocus={() => setShowCalendar(true)} />
+                <Button type="button" variant="ghost" className="absolute right-0 top-0 h-full px-3" onClick={() => setShowCalendar(!showCalendar)}>
+                  <CalendarIcon className="h-4 w-4" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={(selectedDate) => setDate(selectedDate || undefined)} initialFocus />
-              </PopoverContent>
-            </Popover>
+              </div>
+              {showCalendar && (
+                <div className="absolute z-10 mt-1 bg-white border rounded-md shadow-lg">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(newDate) => {
+                      setDate(newDate);
+                      setShowCalendar(false);
+                    }}
+                    disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                    initialFocus
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col">

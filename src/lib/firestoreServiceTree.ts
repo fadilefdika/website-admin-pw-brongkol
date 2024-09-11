@@ -1,24 +1,48 @@
-// lib/firestoreService.ts
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, Timestamp } from 'firebase/firestore';
 import db from './firebase';
 
-// Fungsi untuk mengambil data dari koleksi 'Trees'
+interface PohonData {
+  jenisPohon: string;
+  lokasi: string;
+  namaPetani: string;
+  aksesi: string;
+  tanggalPenanaman: Date | Timestamp;
+  catatan?: string;
+}
+
 export const getPohonData = async () => {
   try {
     const pohonCollection = collection(db, 'Trees');
     const pohonSnapshot = await getDocs(pohonCollection);
-    return pohonSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+    if (pohonSnapshot.empty) {
+      console.log('No tree data found in the database.');
+      return [];
+    }
+
+    return pohonSnapshot.docs.map((doc) => {
+      const data = doc.data();
+      // Convert Timestamp to Date for consistency
+      if (data.tanggalPenanaman instanceof Timestamp) {
+        data.tanggalPenanaman = data.tanggalPenanaman.toDate();
+      }
+      return { id: doc.id, ...data };
+    });
   } catch (error) {
     console.error('Error fetching data from Trees:', error);
-    throw new Error('Failed to fetch data. Please try again later.');
+    throw new Error('Gagal mengambil data. Silakan coba lagi nanti.');
   }
 };
 
-// Fungsi untuk menambahkan data ke koleksi 'Trees'
-export const addPohonData = async (newPohon: { jenisPohon: string; lokasi: string; namaPetani: string; aksesi: string; tanggalPenanaman: Timestamp }) => {
+export const addPohonData = async (newPohon: PohonData) => {
   try {
     const pohonCollection = collection(db, 'Trees');
-    await addDoc(pohonCollection, newPohon);
+    // Convert Date to Timestamp
+    const pohonWithTimestamp = {
+      ...newPohon,
+      tanggalPenanaman: Timestamp.fromDate(newPohon.tanggalPenanaman as Date),
+    };
+    await addDoc(pohonCollection, pohonWithTimestamp);
     alert('Document successfully added!');
   } catch (error) {
     console.error('Error adding document to Trees:', error);
@@ -26,11 +50,15 @@ export const addPohonData = async (newPohon: { jenisPohon: string; lokasi: strin
   }
 };
 
-// Fungsi untuk memperbarui data di koleksi 'Trees'
-export const updatePohonData = async (id: string, updatedData: Partial<{ jenisPohon: string; lokasi: string; namaPetani: string; aksesi: string; tanggalPenanaman: Timestamp }>) => {
+export const updatePohonData = async (id: string, updatedData: Partial<PohonData>) => {
   try {
     const pohonDoc = doc(db, 'Trees', id);
-    await updateDoc(pohonDoc, updatedData);
+    // Convert Date to Timestamp if present
+    const dataToUpdate = { ...updatedData };
+    if (dataToUpdate.tanggalPenanaman instanceof Date) {
+      dataToUpdate.tanggalPenanaman = Timestamp.fromDate(dataToUpdate.tanggalPenanaman);
+    }
+    await updateDoc(pohonDoc, dataToUpdate);
     alert('Document successfully updated!');
   } catch (error) {
     console.error(`Error updating document with ID ${id}:`, error);

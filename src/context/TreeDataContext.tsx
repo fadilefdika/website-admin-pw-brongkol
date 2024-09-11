@@ -12,10 +12,15 @@ interface TreeDataContextType {
   error: string | null;
 }
 
-function formatTimestamp(timestamp: Timestamp): string {
-  const date = timestamp.toDate();
-  return format(date, 'd MMMM yyyy', { locale: id });
-}
+const formatTimestamp = (timestamp: Timestamp | Date | null | undefined): string => {
+  if (timestamp instanceof Timestamp) {
+    return timestamp.toDate().toLocaleDateString();
+  } else if (timestamp instanceof Date) {
+    return timestamp.toLocaleDateString();
+  } else {
+    return 'Invalid Date';
+  }
+};
 
 // Fungsi untuk mengambil data riwayatKegiatan dari subkoleksi
 async function getRiwayatKegiatan(treeId: string) {
