@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,9 @@ const DetailTreePage: React.FC = () => {
   const [riwayatKegiatan, setRiwayatKegiatan] = useState<RiwayatKegiatan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [qrKey, setQrKey] = useState(0); // Add this line
+  const qrCodeRef = useRef<HTMLDivElement>(null);
 
   if (!context) {
     return <p>Context error</p>;
@@ -69,7 +72,11 @@ const DetailTreePage: React.FC = () => {
   }, [id]);
 
   const generateQRCode = () => {
-    alert('sudah tergenerate');
+    if (typeof window !== 'undefined' && qrCodeRef.current) {
+      // Instead of clearing innerHTML, we'll recreate the QR code
+      setQrKey((prevKey) => prevKey + 1);
+      setShowQR(true);
+    }
   };
 
   const formatTanggal = (dateInput: Timestamp | string | Date): string => {
@@ -92,6 +99,20 @@ const DetailTreePage: React.FC = () => {
     return format(date, 'd MMMM yyyy', { locale: idLocale }); // Use the locale object here
   };
 
+  useEffect(() => {
+    if (showQR && qrCodeRef.current) {
+      // Clear existing content
+      qrCodeRef.current.innerHTML = '';
+
+      const currentUrl = window.location.href;
+      new (window as any).QRCode(qrCodeRef.current, {
+        text: currentUrl,
+        width: 256,
+        height: 256,
+      });
+    }
+  }, [showQR, qrKey]); // This effect runs when showQR or qrKey changes
+
   return (
     <div className="p-3 min-h-dvh">
       <div className="flex flex-col gap-4">
@@ -99,12 +120,22 @@ const DetailTreePage: React.FC = () => {
         <div className="flex flex-row gap-4">
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Generate QR Code</CardTitle>
+              <CardTitle className="text-lg font-semibold">QR Code Pohon</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Button onClick={generateQRCode} className="p-1 bg-blue-500 text-white rounded">
-                Generate QR Code
+            <CardContent className="flex flex-col items-center space-y-4">
+              <Button
+                onClick={generateQRCode}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+              >
+                {showQR ? 'Regenerate QR Code' : 'Generate QR Code'}
               </Button>
+              <div
+                ref={qrCodeRef}
+                key={qrKey} // Add this line
+                className={`w-64 h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center ${showQR ? 'bg-white' : 'bg-gray-50'}`}
+              >
+                {!showQR && <span className="text-gray-400 text-sm text-center">QR Code will appear here</span>}
+              </div>
             </CardContent>
           </Card>
           <Card className="flex-1 h-max">
