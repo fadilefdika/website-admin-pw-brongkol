@@ -11,6 +11,7 @@ import db from '@/lib/firebase';
 import { Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
+import { deletePohonData } from '@/lib/firestoreServiceTree';
 
 interface TreeData {
   id: string;
@@ -48,6 +49,19 @@ const DetailTreePage: React.FC = () => {
   const { data } = context;
 
   const treeData = typeof id === 'string' ? data.find((tree) => tree.id === id) : undefined;
+
+  const handleDelete = async () => {
+    if (typeof id === 'string' && confirm('Are you sure you want to delete this tree data?')) {
+      try {
+        await deletePohonData(id);
+        alert('Tree data deleted successfully');
+        router.push('/tree-data'); // Redirect to tree data list page
+      } catch (error) {
+        console.error('Error deleting tree data:', error);
+        alert('Failed to delete tree data. Please try again.');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchRiwayatKegiatan = async () => {
@@ -141,7 +155,12 @@ const DetailTreePage: React.FC = () => {
           <Card className="flex-1 h-max">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Detail Pohon</CardTitle>
-              <ModalPohon editData={treeData} />
+              <div className="flex gap-2">
+                <ModalPohon editData={treeData} />
+                <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white">
+                  Delete
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {treeData ? (
