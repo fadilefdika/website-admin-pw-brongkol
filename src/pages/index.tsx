@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="mx-auto p-3">
+    <div className="mx-auto p-3 min-h-dvh">
       <div className="flex flex-col gap-6">
         <div className="flex flex-row gap-6">
           <CustomCard className="w-[280px]" title="Jumlah Tanaman Durian" description="22 November 2024" content={formatNumber(22)} trees={<Durian className="w-6 h-6" />} indicator={<Bullish className="w-6 h-6" />} percentage={12} />

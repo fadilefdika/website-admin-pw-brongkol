@@ -9,6 +9,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from './textarea';
 import { addPohonData, updatePohonData } from '@/lib/firestoreServiceTree';
+import { Timestamp } from 'firebase/firestore';
 
 export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataChange?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,19 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
 
   useEffect(() => {
     if (editData) {
-      setDate(editData.tanggalPenanaman instanceof Date ? editData.tanggalPenanaman : undefined);
+      // Handle different possible date formats
+      if (editData.tanggalPenanaman) {
+        if (editData.tanggalPenanaman instanceof Timestamp) {
+          setDate(editData.tanggalPenanaman.toDate());
+        } else if (editData.tanggalPenanaman instanceof Date) {
+          setDate(editData.tanggalPenanaman);
+        } else if (typeof editData.tanggalPenanaman === 'string') {
+          setDate(new Date(editData.tanggalPenanaman));
+        }
+      } else {
+        setDate(undefined);
+      }
+
       setNamaPetani(editData.namaPetani || '');
       setJenisPohon(editData.jenisPohon || '');
       setAksesi(editData.aksesi || '');
@@ -51,7 +64,7 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
       jenisPohon,
       aksesi,
       lokasi,
-      tanggalPenanaman: date,
+      tanggalPenanaman: Timestamp.fromDate(date),
       catatan,
     };
 
@@ -62,7 +75,7 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
         await addPohonData(pohonData);
       }
       setIsOpen(false);
-      handleReset();
+      // handleReset();
       if (onDataChange) {
         onDataChange();
       }

@@ -1,9 +1,8 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Tree } from '@/types/tree';
 import { getPohonData } from '@/lib/firestoreServiceTree';
-import { collection, doc, getDocs, Timestamp } from 'firebase/firestore';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { collection, doc, getDocs, Timestamp, onSnapshot } from 'firebase/firestore';
+
 import db from '@/lib/firebase';
 
 interface TreeDataContextType {
@@ -37,35 +36,56 @@ export const TreeDataProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let unsubscribe: () => void;
+
     const fetchData = async () => {
       try {
         setLoading(true);
-        const trees = await getPohonData(); // Mengambil data dari Firestore
 
-        // Ambil data riwayatKegiatan untuk setiap pohon
-        const formattedData = await Promise.all(
-          trees.map(async (tree: any) => {
-            const riwayatKegiatan = await getRiwayatKegiatan(tree.id); // Ganti dengan ID yang sesuai
-            return {
-              ...tree,
-              tanggalPenanaman: tree.tanggalPenanaman ? formatTimestamp(tree.tanggalPenanaman) : null,
-              tanggalPemangkasan: tree.tanggalPemangkasan ? formatTimestamp(tree.tanggalPemangkasan) : null,
-              pemupukanTerakhir: tree.pemupukanTerakhir ? formatTimestamp(tree.pemupukanTerakhir) : null,
-              riwayatKegiatan,
-            };
-          })
+        // Set up realtime listener
+        const treesCollection = collection(db, 'Trees');
+        unsubscribe = onSnapshot(
+          treesCollection,
+          async (snapshot) => {
+            const trees = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+            const formattedData = await Promise.all(
+              trees.map(async (tree: any) => {
+                const riwayatKegiatan = await getRiwayatKegiatan(tree.id);
+                return {
+                  ...tree,
+                  tanggalPenanaman: tree.tanggalPenanaman ? formatTimestamp(tree.tanggalPenanaman) : null,
+                  tanggalPemangkasan: tree.tanggalPemangkasan ? formatTimestamp(tree.tanggalPemangkasan) : null,
+                  pemupukanTerakhir: tree.pemupukanTerakhir ? formatTimestamp(tree.pemupukanTerakhir) : null,
+                  riwayatKegiatan,
+                };
+              })
+            );
+
+            setData(formattedData);
+            setLoading(false);
+          },
+          (error) => {
+            setError('Gagal mengambil data pohon. Silakan coba lagi nanti.');
+            console.error('Error fetching data:', error);
+            setLoading(false);
+          }
         );
-
-        setData(formattedData);
       } catch (err) {
         setError('Gagal mengambil data pohon. Silakan coba lagi nanti.');
-        console.error('Error fetching data:', err);
-      } finally {
+        console.error('Error setting up listener:', err);
         setLoading(false);
       }
     };
 
     fetchData();
+
+    // Clean up listener on unmount
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return <TreeDataContext.Provider value={{ data, loading, error }}>{children}</TreeDataContext.Provider>;
