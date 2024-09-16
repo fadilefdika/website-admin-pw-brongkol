@@ -13,13 +13,14 @@ import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { columnsTree } from '@/pages/tree-data/tabel-tree';
 import { columnsSales } from './sales-data/tabel-sales';
 import { dummyDataPenjualan } from '@/data/dummyDataPenjualan';
-// import { columnsSales } from '@/pages/sales-data/tabel-sales';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMesage';
 
 const Home: React.FC = () => {
   const { data: dataPohon, loading, error } = useTreeData();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <LoadingSpinner message="Loading..." />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="mx-auto p-3 min-h-dvh">

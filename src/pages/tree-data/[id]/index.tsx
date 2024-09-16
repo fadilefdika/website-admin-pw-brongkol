@@ -12,6 +12,7 @@ import { Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import { deletePohonData } from '@/lib/firestoreServiceTree';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface TreeData {
   id: string;
@@ -191,7 +192,7 @@ const DetailTreePage: React.FC = () => {
           </Card>
         </div>
         {loading ? (
-          <p>Loading riwayat kegiatan...</p>
+          <LoadingSpinner message="Loading riwayat kegiatan..." />
         ) : riwayatKegiatan.length > 0 ? (
           riwayatKegiatan.map((kegiatan) => {
             console.log('Kegiatan:', {
@@ -203,7 +204,15 @@ const DetailTreePage: React.FC = () => {
             return <RiwayatCard key={kegiatan.id} jenisKegiatan={kegiatan.jenisKegiatan} deskripsiKegiatan={kegiatan.deskripsiKegiatan} tanggalKegiatan={formatTanggal(kegiatan.tanggalKegiatan)} />;
           })
         ) : (
-          <p>Belum ada riwayat kegiatan untuk pohon ini.</p>
+          <Card className="w-full p-6 bg-gray-50 border border-gray-200">
+            <div className="flex flex-col items-center text-center">
+              <svg className="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <p className="text-lg font-semibold text-gray-700">Belum ada riwayat kegiatan</p>
+              <p className="mt-2 text-sm text-gray-500">Pohon ini belum memiliki catatan kegiatan apapun.</p>
+            </div>
+          </Card>
         )}
       </div>
     </div>

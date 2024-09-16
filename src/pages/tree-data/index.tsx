@@ -3,6 +3,8 @@ import React, { useContext } from 'react';
 import { DataTable } from '@/components/ui/ColumnCustomTable';
 import { columnsTree } from '@/pages/tree-data/tabel-tree';
 import { TreeDataContext } from '@/context/TreeDataContext';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMesage';
 
 const TreeDataPage = () => {
   const context = useContext(TreeDataContext);
@@ -15,7 +17,13 @@ const TreeDataPage = () => {
 
   return (
     <div className="p-3 min-h-dvh">
-      {loading ? <p>Loading...</p> : error ? <p>{error}</p> : <DataTable columns={columnsTree} data={data} rowsPerPage={10} title="Tabel Data Pohon" description="Tabel data tanaman kopi dan durian Desa Brongkol" />}
+      {loading ? (
+        <LoadingSpinner message="Loading..." />
+      ) : error ? (
+        <ErrorMessage message={error} />
+      ) : (
+        <DataTable columns={columnsTree} data={data} rowsPerPage={10} title="Tabel Data Pohon" description="Tabel data tanaman kopi dan durian Desa Brongkol" />
+      )}
     </div>
   );
 };
