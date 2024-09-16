@@ -4,8 +4,9 @@ import type { AppProps } from 'next/app';
 import Layout from '@/components/layout/Layout';
 import { TreeDataProvider } from '@/context/TreeDataContext';
 import Head from 'next/head';
+import { Toaster } from 'react-hot-toast';
 
-function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -21,8 +22,9 @@ function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </Layout>
       </TreeDataProvider>
+      <Toaster position="top-right" />
     </>
   );
 }
 
-export default App;
+export default MyApp;

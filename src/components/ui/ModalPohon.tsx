@@ -75,13 +75,12 @@ export function ModalPohon({ editData, onDataChange }: { editData?: any; onDataC
         await addPohonData(pohonData);
       }
       setIsOpen(false);
-      // handleReset();
+      handleReset();
       if (onDataChange) {
         onDataChange();
       }
     } catch (error) {
       console.error('Error saving tree data:', error);
-      alert('Gagal menyimpan data pohon. Silakan coba lagi.');
     }
   };
 
